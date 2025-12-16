@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar } from 'lucide-react';
+import { X, Calendar, Image } from 'lucide-react';
 import { supabase } from '../supabase';
 
 interface AddTimingModalProps {
@@ -107,13 +107,13 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md bg-black/80 rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.2)] border border-red-900/50 overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-4 bg-red-950/20 border-b border-red-900/50">
-          <h2 className="text-lg font-extrabold text-white uppercase tracking-wider">Agregar Nuevo Timing</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-4 bg-slate-900/50 border-b border-slate-700">
+          <h2 className="text-lg font-bold text-white">Agregar Nuevo Timing</h2>
           <button 
             onClick={onClose}
-            className="text-red-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -121,24 +121,24 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Título / Zona</label>
+            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Título / Zona</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
+              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
               placeholder="Ej: Davis"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Descripción / Lugar</label>
+            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Descripción / Lugar</label>
             <input
               type="text"
               required
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
+              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
               placeholder="Ej: Vías del tren"
             />
           </div>
@@ -156,26 +156,26 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Fecha</label>
+              <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Fecha</label>
               <div className="relative">
                 <input
                   type="date"
                   required
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all [color-scheme:dark]"
+                  className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all [color-scheme:dark]"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Hora</label>
+              <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Hora</label>
               <input
                 type="time"
                 required
                 step="1"
                 value={formData.time}
                 onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all [color-scheme:dark]"
+                className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all [color-scheme:dark]"
               />
             </div>
           </div>
@@ -184,10 +184,10 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold py-2.5 rounded-lg shadow-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-3 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.4)] transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 border border-red-500 uppercase tracking-wide"
             >
               <Calendar className="w-4 h-4" />
-              {loading ? 'Guardando...' : 'Guardar Timing'}
+              {loading ? 'GUARDANDO...' : 'GUARDAR TIMING'}
             </button>
           </div>
         </form>
