@@ -7,42 +7,51 @@ import { AdminPanel } from './Admin';
 import { Watermark } from './Watermark';
 import { TimingCard } from './components/TimingCard';
 import { AddTimingModal } from './components/AddTimingModal';
-import { Plus, LayoutGrid, ListFilter, LogOut, Shield } from 'lucide-react';
+import { Plus, LayoutGrid, ListFilter, LogOut, Shield, Search } from 'lucide-react';
 
 const MainApp = () => {
   const { user, signOut, isAdmin } = useAuth();
   const [timings, setTimings] = useState<Timing[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchTimings();
-    
+    const interval = setInterval(() => {
+      // Force re-render to update countdowns
+      setTimings(prev => [...prev]);
+    }, 1000);
+
     // Subscribe to realtime changes
     const subscription = supabase
       .channel('timings_changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'timings' },
-        (payload) => {
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'timings' }, 
+        () => {
           fetchTimings();
         }
       )
       .subscribe();
 
     return () => {
+      clearInterval(interval);
       subscription.unsubscribe();
     };
   }, []);
 
   const fetchTimings = async () => {
-    const { data, error } = await supabase
-      .from('timings')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) console.error('Error fetching timings:', error);
-    if (data) setTimings(data);
+    try {
+      const { data, error } = await supabase
+        .from('timings')
+        .select('*')
+        .order('created_at', { ascending: true }); // Oldest first, new ones at the bottom
+
+      if (error) throw error;
+      setTimings(data || []);
+    } catch (error) {
+      console.error('Error fetching timings:', error);
+    }
   };
 
   if (!user) {
@@ -81,6 +90,20 @@ const MainApp = () => {
           </div>
           
           <div className="flex items-center gap-3 flex-wrap">
+            {/* Search Bar */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-red-500 group-hover:text-red-400 transition-colors" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-black/50 border border-red-900/50 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full pl-10 p-2.5 placeholder-red-900/70 transition-all hover:border-red-800"
+                placeholder="Buscar zona o lugar..."
+              />
+            </div>
+
             {isAdmin && (
               <button
                 onClick={() => setShowAdmin(!showAdmin)}
