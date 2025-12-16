@@ -151,6 +151,16 @@ const MainApp = () => {
       </div>
 
       <AddTimingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      
+      {/* Footer Signature */}
+      <div className="fixed bottom-4 left-4 z-50 pointer-events-none">
+        <span 
+          className="text-white text-xl tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+          style={{ fontFamily: 'Impact, sans-serif' }}
+        >
+          By : <span className="text-red-500">!Kyt</span>
+        </span>
+      </div>
     </div>
   );
 };
