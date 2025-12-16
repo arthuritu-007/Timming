@@ -50,13 +50,24 @@ const MainApp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-black text-slate-200 p-6 md:p-8 font-sans relative">
+    <div className="min-h-screen bg-black text-slate-200 p-6 md:p-8 font-sans relative">
       <Watermark />
 
-      {/* Background Decorations */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-[128px]" />
+      {/* Background Decorations - Fixed Image */}
+      <div className="fixed inset-0 z-0 pointer-events-none flex items-center justify-center">
+         <img 
+            src="/bg.png" 
+            alt="Background" 
+            className="w-full h-full object-contain opacity-50 max-w-[100vw] max-h-[100vh]"
+            onError={(e) => {
+              console.error('Error loading background image', e);
+              // Fallback to try loading without leading slash if relative path issue
+              const img = e.target as HTMLImageElement;
+              if (img.src.includes('/bg.png')) {
+                img.src = 'bg.png';
+              }
+            }}
+         />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto space-y-8">

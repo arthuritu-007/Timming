@@ -37,8 +37,24 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4">
-      <div className="max-w-md w-full bg-gray-800 rounded-lg p-8 shadow-lg border border-gray-700">
+    <div className="min-h-screen flex items-center justify-center bg-black text-white p-4 relative overflow-hidden">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none">
+         <img 
+            src="/bg.png" 
+            alt="Background" 
+            className="w-full h-full object-contain opacity-40 max-w-[100vw] max-h-[100vh]"
+            onError={(e) => {
+              console.error('Error loading login background image', e);
+              const img = e.target as HTMLImageElement;
+              if (img.src.includes('/bg.png')) {
+                img.src = 'bg.png';
+              }
+            }}
+         />
+      </div>
+
+      <div className="max-w-md w-full bg-gray-900/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-gray-700 relative z-10">
         <h2 className="text-3xl font-bold text-center mb-6 text-cyan-400">
           {mode === 'signin' ? 'Iniciar Sesión' : 'Registrarse'}
         </h2>
