@@ -40,6 +40,23 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
     return () => clearInterval(timer);
   }, [expirationTime]);
 
+  const handleDelete = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este timing? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('timings')
+        .delete()
+        .eq('id', timing.id);
+
+      if (error) throw error;
+    } catch (error) {
+      alert('Error al eliminar el timing: ' + error);
+    }
+  };
+
   return (
     <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-black/80 shadow-[0_0_15px_rgba(255,0,0,0.1)] border border-red-900/30 backdrop-blur-md group hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)] transition-all duration-300">
       {/* Background Glow Effect */}
