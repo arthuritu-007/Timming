@@ -17,7 +17,58 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
     date: new Date().toISOString().split('T')[0],
   });
 
+  const [dragActive, setDragActive] = useState(false);
+
   if (!isOpen) return null;
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      await handleFileUpload(file);
+    }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      await handleFileUpload(e.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setLoading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+      setFormData(prev => ({ ...prev, imageUrl: data.publicUrl }));
+    } catch (error) {
+      alert('Error uploading image: ' + error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,13 +107,13 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-4 bg-slate-900/50 border-b border-slate-700">
-          <h2 className="text-lg font-bold text-white">Agregar Nuevo Timing</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md bg-black/80 rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.2)] border border-red-900/50 overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-4 bg-red-950/20 border-b border-red-900/50">
+          <h2 className="text-lg font-extrabold text-white uppercase tracking-wider">Agregar Nuevo Timing</h2>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-red-400 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -70,24 +121,24 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Título / Zona</label>
+            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Título / Zona</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
               placeholder="Ej: Davis"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Descripción / Lugar</label>
+            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Descripción / Lugar</label>
             <input
               type="text"
               required
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
               placeholder="Ej: Vías del tren"
             />
           </div>
