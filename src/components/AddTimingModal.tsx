@@ -121,37 +121,74 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Título / Zona</label>
+            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Título / Zona</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
               placeholder="Ej: Davis"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Descripción / Lugar</label>
+            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Descripción / Lugar</label>
             <input
               type="text"
               required
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-black/50 border border-red-900/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all placeholder-gray-600"
               placeholder="Ej: Vías del tren"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase mb-1">URL de Imagen (Opcional)</label>
-            <input
-              type="url"
-              value={formData.imageUrl}
-              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
-              placeholder="https://..."
-            />
+            <label className="block text-xs font-bold text-red-500 uppercase mb-1 tracking-wide">Imagen</label>
+            <div 
+              onClick={() => document.getElementById('file-upload')?.click()}
+              className={`w-full bg-black/50 border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer group hover:bg-red-900/10 ${dragActive ? 'border-red-500 bg-red-900/20' : 'border-red-900/50'}`}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            >
+              {formData.imageUrl ? (
+                <div className="relative group/preview" onClick={(e) => e.stopPropagation()}>
+                  <img src={formData.imageUrl} alt="Preview" className="h-32 w-full object-cover rounded-md border border-red-900/50" />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({...formData, imageUrl: ''})}
+                    className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover/preview:opacity-100 transition-opacity shadow-md"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex justify-center">
+                    <div className="p-4 bg-red-900/20 rounded-full border border-red-900/30 group-hover:scale-110 transition-transform duration-300">
+                      <Image className="w-8 h-8 text-red-500" /> 
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                     <p className="text-sm font-medium text-red-200 group-hover:text-red-100 transition-colors">
+                        Haz click o arrastra una imagen aquí
+                     </p>
+                     <p className="text-xs text-red-400/50">
+                        Soporta JPG, PNG, WEBP
+                     </p>
+                  </div>
+                  <input 
+                     id="file-upload"
+                     type="file" 
+                     className="hidden" 
+                     accept="image/*" 
+                     onChange={handleFileSelect} 
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
