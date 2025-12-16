@@ -3,8 +3,10 @@ import { Timing } from '../types';
 import { getTimingStatus } from '../utils';
 import { format, formatDistanceToNow, differenceInSeconds, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Trash2, Timer } from 'lucide-react';
+import { Trash2, Timer, Clock } from 'lucide-react';
 import { supabase } from '../supabase';
+import { clsx } from 'clsx';
+import { useAuth } from '../context/AuthContext';
 
 interface TimingCardProps {
   timing: Timing;
@@ -37,23 +39,6 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
 
     return () => clearInterval(timer);
   }, [expirationTime]);
-
-  const handleDelete = async () => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar este timing? Esta acción no se puede deshacer.')) {
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('timings')
-        .delete()
-        .eq('id', timing.id);
-
-      if (error) throw error;
-    } catch (error) {
-      alert('Error al eliminar el timing: ' + error);
-    }
-  };
 
   return (
     <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-black/80 shadow-[0_0_15px_rgba(255,0,0,0.1)] border border-red-900/30 backdrop-blur-md group hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)] transition-all duration-300">
@@ -114,29 +99,25 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="flex gap-2 pt-2">
           <button 
             disabled={!isAdmin}
-            className="flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 disabled:bg-black/50 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded border border-slate-600 shadow-md transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-800 to-purple-600 hover:from-purple-700 hover:to-purple-500 disabled:from-gray-900 disabled:to-gray-900 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2.5 rounded border border-purple-500/50 shadow-md transition-all"
           >
-            <MapPin className="w-3.5 h-3.5" />
-            Localizar
+            <Timer className="w-3.5 h-3.5" />
+            Timear
           </button>
-          <button 
-            disabled={!isAdmin}
-            className="flex items-center justify-center gap-1.5 bg-red-700 hover:bg-red-600 disabled:bg-black/50 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded border border-red-600 shadow-md transition-colors"
-          >
-            <Flag className="w-3.5 h-3.5" />
-            Conquistar
-          </button>
+          
+          {isAdmin && (
+            <button 
+              onClick={handleDelete}
+              className="flex items-center justify-center p-2.5 bg-red-950/50 hover:bg-red-900 text-red-500 hover:text-red-400 rounded border border-red-900 hover:border-red-500 transition-colors"
+              title="Eliminar Timing"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
         </div>
-        <button 
-          disabled={!isAdmin}
-          className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-800 to-purple-600 hover:from-purple-700 hover:to-purple-500 disabled:from-gray-900 disabled:to-gray-900 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2.5 rounded border border-purple-500/50 shadow-md mt-2 transition-all"
-        >
-          <Timer className="w-3.5 h-3.5" />
-          Timear
-        </button>
       </div>
     </div>
   );
