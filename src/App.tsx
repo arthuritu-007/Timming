@@ -58,6 +58,11 @@ const MainApp = () => {
     return <Login />;
   }
 
+  const filteredTimings = timings.filter(timing => 
+    timing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    timing.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-black text-slate-200 p-6 md:p-8 font-sans relative">
       <Watermark />
