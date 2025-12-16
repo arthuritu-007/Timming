@@ -180,21 +180,4 @@ const MainApp = () => {
   );
 };
 
-function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
-  );
-}
-
-export default App;
-function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
-  );
-}
-
 export default App;
