@@ -46,14 +46,19 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
     }
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('timings')
         .delete()
-        .eq('id', timing.id);
+        .eq('id', timing.id)
+        .select();
 
       if (error) throw error;
-    } catch (error) {
-      alert('Error al eliminar el timing: ' + error);
+
+      if (!data || data.length === 0) {
+        throw new Error('No tienes permiso para borrar. Revisa las "Policies" en Supabase.');
+      }
+    } catch (error: any) {
+      alert('Error: ' + (error.message || error));
     }
   };
 

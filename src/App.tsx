@@ -60,7 +60,7 @@ const MainApp = () => {
 
   const filteredTimings = timings.filter(timing => 
     timing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    timing.description.toLowerCase().includes(searchQuery.toLowerCase())
+    timing.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -184,13 +184,5 @@ const MainApp = () => {
     </div>
   );
 };
-
-function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
-  );
-}
 
 export default App;
