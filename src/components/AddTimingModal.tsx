@@ -107,15 +107,15 @@ export const AddTimingModal: React.FC<AddTimingModalProps> = ({ isOpen, onClose 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="flex items-center justify-between p-4 bg-slate-900/50 border-b border-slate-700">
-          <h2 className="text-lg font-bold text-white">Agregar Nuevo Timing</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md bg-black rounded-xl shadow-[0_0_30px_rgba(220,38,38,0.3)] border border-red-900/50 overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="flex items-center justify-between p-4 bg-red-950/20 border-b border-red-900/50">
+          <h2 className="text-lg font-extrabold text-white uppercase tracking-wider font-impact">Agregar Nuevo Timing</h2>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-red-500 hover:text-white transition-colors hover:rotate-90 duration-300"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
