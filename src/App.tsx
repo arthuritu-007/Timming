@@ -90,20 +90,6 @@ const MainApp = () => {
           </div>
           
           <div className="flex items-center gap-3 flex-wrap">
-            {/* Search Bar */}
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-red-500 group-hover:text-red-400 transition-colors" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-black/50 border border-red-900/50 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full pl-10 p-2.5 placeholder-red-900/70 transition-all hover:border-red-800"
-                placeholder="Buscar zona o lugar..."
-              />
-            </div>
-
             {isAdmin && (
               <button
                 onClick={() => setShowAdmin(!showAdmin)}
@@ -147,12 +133,18 @@ const MainApp = () => {
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {timings.map((timing) => (
+          {filteredTimings.map((timing) => (
             <TimingCard key={timing.id} timing={timing} />
           ))}
           
           {/* Empty State / Add New Placeholder - Only for Admin */}
-          {timings.length === 0 && isAdmin && (
+          {filteredTimings.length === 0 && searchQuery && (
+            <div className="col-span-full text-center py-12 text-red-400/50 font-medium tracking-wider">
+              NO SE ENCONTRARON RESULTADOS PARA "{searchQuery}".
+            </div>
+          )}
+
+          {timings.length === 0 && !searchQuery && isAdmin && (
             <div 
               onClick={() => setIsModalOpen(true)}
               className="flex flex-col items-center justify-center min-h-[320px] rounded-xl border-2 border-dashed border-red-900/50 bg-black/60 hover:border-red-500 hover:bg-red-950/20 transition-all cursor-pointer group backdrop-blur-sm"
@@ -188,6 +180,15 @@ const MainApp = () => {
   );
 };
 
+function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}
+
+export default App;
 function App() {
   return (
     <AuthProvider>

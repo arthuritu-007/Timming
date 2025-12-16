@@ -3,9 +3,8 @@ import { Timing } from '../types';
 import { getTimingStatus } from '../utils';
 import { format, formatDistanceToNow, differenceInSeconds, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Clock, MapPin, Flag, Timer } from 'lucide-react';
-import { clsx } from 'clsx';
-import { useAuth } from '../context/AuthContext';
+import { Trash2, Timer } from 'lucide-react';
+import { supabase } from '../supabase';
 
 interface TimingCardProps {
   timing: Timing;
@@ -38,6 +37,23 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
 
     return () => clearInterval(timer);
   }, [expirationTime]);
+
+  const handleDelete = async () => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este timing? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('timings')
+        .delete()
+        .eq('id', timing.id);
+
+      if (error) throw error;
+    } catch (error) {
+      alert('Error al eliminar el timing: ' + error);
+    }
+  };
 
   return (
     <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-black/80 shadow-[0_0_15px_rgba(255,0,0,0.1)] border border-red-900/30 backdrop-blur-md group hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)] transition-all duration-300">
