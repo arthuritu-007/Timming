@@ -72,30 +72,30 @@ const MainApp = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-red-900/50 pb-6">
           <div className="space-y-1">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 tracking-tight">
-              Control de Timings
+            <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-white tracking-tight drop-shadow-[0_2px_2px_rgba(255,0,0,0.5)]" style={{ fontFamily: 'Impact, sans-serif', letterSpacing: '1px' }}>
+              CONTROL DE TIMINGS
             </h1>
-            <p className="text-slate-400 text-sm">Sistema de gestión de zonas y disputas</p>
+            <p className="text-red-200/70 text-sm font-medium">SISTEMA DE GESTIÓN DE ZONAS Y DISPUTAS</p>
           </div>
           
           <div className="flex items-center gap-3 flex-wrap">
             {isAdmin && (
               <button
                 onClick={() => setShowAdmin(!showAdmin)}
-                className={`p-2 rounded-lg border transition-colors ${showAdmin ? 'bg-purple-900/50 border-purple-500 text-purple-300' : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-white'}`}
+                className={`p-2 rounded-lg border transition-colors ${showAdmin ? 'bg-red-900/50 border-red-500 text-red-300' : 'bg-black/50 border-red-900/50 text-red-400 hover:text-white hover:border-red-500'}`}
                 title="Panel de Administración"
               >
                 <Shield className="w-5 h-5" />
               </button>
             )}
 
-            <div className="hidden md:flex bg-slate-800/50 rounded-lg p-1 border border-slate-700">
-              <button className="p-2 text-emerald-400 bg-slate-700/50 rounded shadow-sm">
+            <div className="hidden md:flex bg-black/50 rounded-lg p-1 border border-red-900/50">
+              <button className="p-2 text-red-500 bg-red-900/20 rounded shadow-sm border border-red-900/30">
                 <LayoutGrid className="w-5 h-5" />
               </button>
-              <button className="p-2 text-slate-400 hover:text-white transition-colors">
+              <button className="p-2 text-red-400/50 hover:text-red-400 transition-colors">
                 <ListFilter className="w-5 h-5" />
               </button>
             </div>
@@ -103,19 +103,19 @@ const MainApp = () => {
             {isAdmin && (
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-5 rounded-lg shadow-lg shadow-emerald-500/20 transition-all transform hover:scale-105"
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-all transform hover:scale-105 border border-red-500"
               >
                 <Plus className="w-5 h-5" />
-                <span>Nuevo Timing</span>
+                <span>NUEVO TIMING</span>
               </button>
             )}
 
             <button
               onClick={signOut}
-              className="flex items-center gap-2 bg-slate-800 hover:bg-red-900/30 text-slate-300 hover:text-red-400 font-bold py-2.5 px-4 rounded-lg border border-slate-700 hover:border-red-800 transition-colors"
+              className="flex items-center gap-2 bg-black/80 hover:bg-red-950 text-red-400 hover:text-red-200 font-bold py-2.5 px-4 rounded-lg border border-red-900/50 hover:border-red-500 transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span className="hidden sm:inline">Salir</span>
+              <span className="hidden sm:inline">SALIR</span>
             </button>
           </div>
         </header>
@@ -132,19 +132,19 @@ const MainApp = () => {
           {timings.length === 0 && isAdmin && (
             <div 
               onClick={() => setIsModalOpen(true)}
-              className="flex flex-col items-center justify-center min-h-[320px] rounded-xl border-2 border-dashed border-slate-700 bg-slate-900/50 hover:border-emerald-500/50 hover:bg-slate-800/50 transition-all cursor-pointer group"
+              className="flex flex-col items-center justify-center min-h-[320px] rounded-xl border-2 border-dashed border-red-900/50 bg-black/60 hover:border-red-500 hover:bg-red-950/20 transition-all cursor-pointer group backdrop-blur-sm"
             >
-              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Plus className="w-8 h-8 text-slate-400 group-hover:text-emerald-400" />
+              <div className="w-16 h-16 rounded-full bg-red-900/20 border border-red-900/50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform group-hover:border-red-500 group-hover:bg-red-900/40">
+                <Plus className="w-8 h-8 text-red-500 group-hover:text-red-400" />
               </div>
-              <h3 className="text-slate-300 font-bold">Sin registros</h3>
-              <p className="text-slate-500 text-sm">Click para agregar uno nuevo</p>
+              <h3 className="text-red-100 font-bold tracking-wide uppercase">Sin registros</h3>
+              <p className="text-red-400/60 text-sm">Click para agregar uno nuevo</p>
             </div>
           )}
           
           {timings.length === 0 && !isAdmin && (
-            <div className="col-span-full text-center py-12 text-slate-500">
-              No hay timings activos en este momento.
+            <div className="col-span-full text-center py-12 text-red-400/50 font-medium tracking-wider">
+              NO HAY TIMINGS ACTIVOS EN ESTE MOMENTO.
             </div>
           )}
         </div>

@@ -40,18 +40,18 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
   }, [expirationTime]);
 
   return (
-    <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-slate-900/90 shadow-lg border border-slate-700/50 backdrop-blur-sm group hover:border-emerald-500/30 transition-all duration-300">
+    <div className="relative w-full max-w-sm overflow-hidden rounded-xl bg-black/80 shadow-[0_0_15px_rgba(255,0,0,0.1)] border border-red-900/30 backdrop-blur-md group hover:border-red-500/50 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)] transition-all duration-300">
       {/* Background Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-slate-900 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-950/10 to-red-950/30 pointer-events-none" />
       
       {/* Image Header */}
-      <div className="relative h-40 w-full overflow-hidden">
+      <div className="relative h-40 w-full overflow-hidden border-b border-red-900/30">
         <img
           src={timing.photo_url || 'https://via.placeholder.com/400x300'}
           alt={timing.description}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
         />
-        <div className="absolute top-3 left-3 bg-slate-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm backdrop-blur-md">
+        <div className="absolute top-3 left-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded border border-red-500/50 uppercase tracking-wider shadow-sm backdrop-blur-md">
           Libre
         </div>
       </div>
@@ -59,10 +59,10 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
       {/* Content */}
       <div className="p-4 space-y-3 relative z-10">
         <div>
-          <h3 className="text-xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">
+          <h3 className="text-xl font-bold text-white drop-shadow-[0_0_5px_rgba(255,0,0,0.8)] uppercase tracking-wide">
             {timing.title}
           </h3>
-          <p className="text-slate-300 text-sm font-medium truncate">
+          <p className="text-red-200/70 text-sm font-medium truncate">
             {timing.description}
           </p>
         </div>
@@ -70,28 +70,28 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
         {/* Status Block */}
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-white">
-            <Clock className="w-4 h-4 text-slate-400" />
-            <span className="text-xs font-bold uppercase text-slate-400">Último timing:</span>
-            <span className="font-mono text-sm tracking-wide">
+            <Clock className="w-4 h-4 text-red-500" />
+            <span className="text-xs font-bold uppercase text-red-400">Último timing:</span>
+            <span className="font-mono text-sm tracking-wide text-white">
               {format(lastTimingDate, 'HH:mm:ss')}
             </span>
           </div>
-          <div className="text-xs text-slate-500 pl-6">
+          <div className="text-xs text-red-300/50 pl-6">
             {format(lastTimingDate, 'dd/MM/yyyy')} — hace{' '}
             {formatDistanceToNow(lastTimingDate, { locale: es, addSuffix: false })}
           </div>
         </div>
         
         {/* Countdown / Status */}
-        <div className="flex items-center gap-2 py-1">
+        <div className="flex items-center gap-2 py-1 bg-red-950/20 rounded px-2 -mx-2 border border-red-900/20">
            <div className={clsx(
-             "text-sm font-bold",
-             isExpired ? "text-emerald-500" : "text-amber-500"
+             "text-sm font-bold uppercase",
+             isExpired ? "text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]" : "text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]"
            )}>
              {isExpired ? "Disponible para tomar" : "En disputa (Posible)"}
            </div>
            {!isExpired && (
-             <span className="ml-auto font-mono text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
+             <span className="ml-auto font-mono text-xs text-red-200 bg-red-900/50 px-2 py-0.5 rounded border border-red-800">
                {timeLeft}
              </span>
            )}
@@ -101,14 +101,14 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
         <div className="grid grid-cols-2 gap-2 pt-2">
           <button 
             disabled={!isAdmin}
-            className="flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors"
+            className="flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 disabled:bg-black/50 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded border border-slate-600 shadow-md transition-colors"
           >
             <MapPin className="w-3.5 h-3.5" />
             Localizar
           </button>
           <button 
             disabled={!isAdmin}
-            className="flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-500 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded shadow-md transition-colors"
+            className="flex items-center justify-center gap-1.5 bg-red-700 hover:bg-red-600 disabled:bg-black/50 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2 px-3 rounded border border-red-600 shadow-md transition-colors"
           >
             <Flag className="w-3.5 h-3.5" />
             Conquistar
@@ -116,7 +116,7 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
         </div>
         <button 
           disabled={!isAdmin}
-          className="w-full flex items-center justify-center gap-1.5 bg-violet-600 hover:bg-violet-500 disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold py-2.5 rounded shadow-md mt-2 transition-colors"
+          className="w-full flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-800 to-purple-600 hover:from-purple-700 hover:to-purple-500 disabled:from-gray-900 disabled:to-gray-900 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2.5 rounded border border-purple-500/50 shadow-md mt-2 transition-all"
         >
           <Timer className="w-3.5 h-3.5" />
           Timear
