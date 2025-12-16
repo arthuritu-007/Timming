@@ -28,24 +28,89 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else setLoading(false);
+    // 1. Session Timeout Logic
+    const updateActivity = () => {
+      localStorage.setItem('last_active_time', Date.now().toString());
+    };
+
+    // Check on mount if session is expired
+    const checkSessionTimeout = async () => {
+      const lastActive = localStorage.getItem('last_active_time');
+      if (lastActive) {
+        const diff = Date.now() - parseInt(lastActive, 10);
+        // 5 minutes in milliseconds
+        if (diff > 5 * 60 * 1000) {
+          console.warn('Session expired due to inactivity (closed tab for > 5 mins)');
+          await supabase.auth.signOut();
+          localStorage.removeItem('last_active_time');
+          return true; // Expired
+        }
+      }
+      // If not expired, update timestamp
+      updateActivity();
+      return false; // Valid
+    };
+
+    // Start heartbeat to keep session alive while tab is open
+    const activityInterval = setInterval(updateActivity, 10000); // Update every 10s
+
+    // Safety timeout: force loading to false after 5 seconds
+    const safetyTimeout = setTimeout(() => {
+      setLoading((currentLoading) => {
+        if (currentLoading) {
+          console.warn('Auth check timed out, forcing loading to false');
+          return false;
+        }
+        return currentLoading;
+      });
+    }, 5000);
+
+    // Initial Check
+    checkSessionTimeout().then((expired) => {
+      if (expired) {
+        setLoading(false);
+        return;
+      }
+
+      // Normal Auth Flow
+      supabase.auth.getSession().then(({ data: { session }, error }) => {
+        if (error) {
+          console.error('Error checking session:', error);
+          setLoading(false);
+          return;
+        }
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchProfile(session.user.id);
+        } else {
+          setLoading(false);
+        }
+      }).catch((err) => {
+        console.error('Unexpected error checking session:', err);
+        setLoading(false);
+      }).finally(() => {
+        clearTimeout(safetyTimeout);
+      });
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      else {
+      if (session?.user) {
+        fetchProfile(session.user.id);
+        updateActivity(); // Ensure we have a timestamp on login
+      } else {
         setProfile(null);
         setLoading(false);
+        localStorage.removeItem('last_active_time'); // Clear on logout
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(activityInterval);
+    };
   }, []);
 
   const fetchProfile = async (userId: string) => {
