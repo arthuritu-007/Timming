@@ -7,12 +7,14 @@ import { AdminPanel } from './Admin';
 import { Watermark } from './Watermark';
 import { TimingCard } from './components/TimingCard';
 import { AddTimingModal } from './components/AddTimingModal';
+import { UpdateTimingModal } from './components/UpdateTimingModal';
 import { Plus, LayoutGrid, ListFilter, LogOut, Shield, Search } from 'lucide-react';
 
 const MainApp = () => {
   const { user, signOut, isAdmin } = useAuth();
   const [timings, setTimings] = useState<Timing[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTiming, setSelectedTiming] = useState<Timing | null>(null);
   const [showAdmin, setShowAdmin] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -139,7 +141,11 @@ const MainApp = () => {
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTimings.map((timing) => (
-            <TimingCard key={timing.id} timing={timing} />
+            <TimingCard 
+              key={timing.id} 
+              timing={timing} 
+              onTimear={(t) => setSelectedTiming(t)}
+            />
           ))}
           
           {/* Empty State / Add New Placeholder - Only for Admin */}
