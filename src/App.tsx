@@ -172,6 +172,16 @@ const MainApp = () => {
 
       <AddTimingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       
+      {selectedTiming && (
+        <UpdateTimingModal 
+          isOpen={!!selectedTiming}
+          onClose={() => setSelectedTiming(null)}
+          timingId={selectedTiming.id}
+          currentTiming={selectedTiming.last_timing}
+          timingTitle={selectedTiming.title}
+        />
+      )}
+
       {/* Footer Signature */}
       <div className="fixed bottom-4 left-4 z-50 pointer-events-none">
         <span 

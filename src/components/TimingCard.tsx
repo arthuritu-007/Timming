@@ -7,15 +7,14 @@ import { Trash2, Timer, Clock } from 'lucide-react';
 import { supabase } from '../supabase';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
-import { UpdateTimingModal } from './UpdateTimingModal';
 
 interface TimingCardProps {
   timing: Timing;
+  onTimear: (timing: Timing) => void;
 }
 
-export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
+export const TimingCard: React.FC<TimingCardProps> = ({ timing, onTimear }) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const lastTimingDate = parseISO(timing.last_timing);
   const { isExpired, expirationTime } = getTimingStatus(lastTimingDate);
   const { isAdmin } = useAuth();
@@ -125,6 +124,7 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
         {/* Action Buttons */}
         <div className="flex gap-2 pt-2">
           <button 
+            onClick={() => onTimear(timing)}
             disabled={!isAdmin}
             className="flex-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-800 to-purple-600 hover:from-purple-700 hover:to-purple-500 disabled:from-gray-900 disabled:to-gray-900 disabled:text-gray-600 disabled:border-gray-800 disabled:cursor-not-allowed text-white text-xs font-bold py-2.5 rounded border border-purple-500/50 shadow-md transition-all"
           >
