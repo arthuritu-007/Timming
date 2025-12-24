@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Timing } from '../types';
 import { getTimingStatus } from '../utils';
-import { format, formatDistanceToNow, differenceInSeconds, parseISO } from 'date-fns';
+import { format, formatDistanceToNow, differenceInSeconds, parseISO, addHours } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Trash2, Timer, Clock } from 'lucide-react';
 import { supabase } from '../supabase';
