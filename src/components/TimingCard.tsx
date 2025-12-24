@@ -121,6 +121,19 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing, onTimear }) => {
            )}
         </div>
 
+        {/* Future Timings List */}
+        <div className="space-y-0.5 text-xs font-mono pt-1">
+          {[12, 13, 14, 15].map((hour) => (
+            <div key={hour} className="flex justify-between items-center text-gray-400">
+              <span className="font-bold text-white w-8">{hour}h:</span>
+              <div className="flex gap-2">
+                <span className="text-white">{getFutureLocalTime(hour)}</span>
+                <span className="text-gray-500">({getHubTime(hour)} HUB)</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Action Buttons */}
         <div className="flex gap-2 pt-2">
           <button 
