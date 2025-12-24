@@ -19,6 +19,21 @@ export const TimingCard: React.FC<TimingCardProps> = ({ timing, onTimear }) => {
   const { isExpired, expirationTime } = getTimingStatus(lastTimingDate);
   const { isAdmin } = useAuth();
 
+  // Calculate future timings based on last_timing (UTC)
+  const getHubTime = (hoursToAdd: number) => {
+    const futureDate = addHours(lastTimingDate, hoursToAdd);
+    // Format manually to ensure UTC display
+    const h = futureDate.getUTCHours().toString().padStart(2, '0');
+    const m = futureDate.getUTCMinutes().toString().padStart(2, '0');
+    const s = futureDate.getUTCSeconds().toString().padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  };
+
+  const getFutureLocalTime = (hoursToAdd: number) => {
+      const futureDate = addHours(lastTimingDate, hoursToAdd);
+      return format(futureDate, 'HH:mm:ss');
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
