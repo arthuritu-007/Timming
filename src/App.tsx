@@ -44,6 +44,7 @@ const MainApp = () => {
 
   const fetchTimings = async () => {
     try {
+      // Fetch timings ordered by creation date
       const { data, error } = await supabase
         .from('timings')
         .select('*')
