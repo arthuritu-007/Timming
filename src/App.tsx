@@ -66,6 +66,16 @@ const MainApp = () => {
     timing.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Group timings by title
+  const groupedTimings = filteredTimings.reduce((acc, timing) => {
+    const key = timing.title.toUpperCase(); // Normalize to uppercase for grouping
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(timing);
+    return acc;
+  }, {} as Record<string, Timing[]>);
+
   return (
     <div className="min-h-screen bg-black text-slate-200 p-6 md:p-8 font-sans relative">
       <Watermark />
@@ -97,7 +107,21 @@ const MainApp = () => {
             <p className="text-red-200/70 text-sm font-medium">SISTEMA DE GESTIÓN DE ZONAS Y DISPUTAS</p>
           </div>
           
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap w-full md:w-auto">
+            {/* Search Bar */}
+            <div className="relative flex-1 md:flex-none min-w-[200px]">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-4 w-4 text-red-500" />
+              </div>
+              <input
+                type="text"
+                placeholder="Buscar zona..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-black/50 border border-red-900/50 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block pl-10 p-2.5 placeholder-red-900/50"
+              />
+            </div>
+
             {isAdmin && (
               <button
                 onClick={() => setShowAdmin(!showAdmin)}
@@ -108,22 +132,14 @@ const MainApp = () => {
               </button>
             )}
 
-            <div className="hidden md:flex bg-black/50 rounded-lg p-1 border border-red-900/50">
-              <button className="p-2 text-red-500 bg-red-900/20 rounded shadow-sm border border-red-900/30">
-                <LayoutGrid className="w-5 h-5" />
-              </button>
-              <button className="p-2 text-red-400/50 hover:text-red-400 transition-colors">
-                <ListFilter className="w-5 h-5" />
-              </button>
-            </div>
-
             {isAdmin && (
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-all transform hover:scale-105 border border-red-500"
               >
                 <Plus className="w-5 h-5" />
-                <span>NUEVO TIMING</span>
+                <span className="hidden sm:inline">NUEVO TIMING</span>
+                <span className="sm:hidden">NUEVO</span>
               </button>
             )}
 
@@ -132,26 +148,38 @@ const MainApp = () => {
               className="flex items-center gap-2 bg-black/80 hover:bg-red-950 text-red-400 hover:text-red-200 font-bold py-2.5 px-4 rounded-lg border border-red-900/50 hover:border-red-500 transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span className="hidden sm:inline">SALIR</span>
             </button>
           </div>
         </header>
 
         {showAdmin && isAdmin && <AdminPanel />}
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredTimings.map((timing) => (
-            <TimingCard 
-              key={timing.id} 
-              timing={timing} 
-              onTimear={(t) => setSelectedTiming(t)}
-            />
+        {/* Grouped Timings */}
+        <div className="space-y-12">
+          {Object.entries(groupedTimings).map(([title, groupTimings]) => (
+            <div key={title} className="space-y-4 animate-in fade-in duration-500">
+              <div className="flex items-center gap-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-widest drop-shadow-[0_0_10px_rgba(220,38,38,0.5)] border-l-4 border-red-600 pl-4" style={{ fontFamily: 'Impact, sans-serif' }}>
+                  {title}
+                </h2>
+                <div className="h-px bg-gradient-to-r from-red-900/50 to-transparent flex-1" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {groupTimings.map((timing) => (
+                  <TimingCard 
+                    key={timing.id} 
+                    timing={timing} 
+                    onTimear={(t) => setSelectedTiming(t)}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
-          
-          {/* Empty State / Add New Placeholder - Only for Admin */}
+
+          {/* Empty State */}
           {filteredTimings.length === 0 && searchQuery && (
-            <div className="col-span-full text-center py-12 text-red-400/50 font-medium tracking-wider">
+            <div className="text-center py-12 text-red-400/50 font-medium tracking-wider border border-dashed border-red-900/30 rounded-xl bg-black/40">
               NO SE ENCONTRARON RESULTADOS PARA "{searchQuery}".
             </div>
           )}
@@ -170,7 +198,7 @@ const MainApp = () => {
           )}
           
           {timings.length === 0 && !isAdmin && (
-            <div className="col-span-full text-center py-12 text-red-400/50 font-medium tracking-wider">
+            <div className="text-center py-12 text-red-400/50 font-medium tracking-wider">
               NO HAY TIMINGS ACTIVOS EN ESTE MOMENTO.
             </div>
           )}
