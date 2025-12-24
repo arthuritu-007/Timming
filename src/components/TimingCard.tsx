@@ -7,6 +7,7 @@ import { Trash2, Timer, Clock } from 'lucide-react';
 import { supabase } from '../supabase';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
+import { UpdateTimingModal } from './UpdateTimingModal';
 
 interface TimingCardProps {
   timing: Timing;
@@ -14,6 +15,7 @@ interface TimingCardProps {
 
 export const TimingCard: React.FC<TimingCardProps> = ({ timing }) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const lastTimingDate = parseISO(timing.last_timing);
   const { isExpired, expirationTime } = getTimingStatus(lastTimingDate);
   const { isAdmin } = useAuth();
